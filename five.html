@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form Validator</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 480px; margin: 30px auto; padding: 0 16px; }
+        h1 { text-align: center; }
+        .field { margin-bottom: 16px; }
+        label { display: block; font-weight: bold; margin-bottom: 4px; }
+        input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #d1d5db; border-radius: 4px; }
+        input.valid   { border-color: #16a34a; background: #f0fdf4; }
+        input.invalid { border-color: #dc2626; background: #fef2f2; }
+        .feedback    { font-size: 0.85rem; margin-top: 4px; min-height: 1em; }
+        .feedback.ok { color: #16a34a; }
+        .feedback.bad{ color: #dc2626; }
+        button {
+            width: 100%; padding: 10px; background: #2563eb; color: #fff;
+            border: 0; border-radius: 4px; font-size: 1rem; cursor: pointer;
+        }
+        button:disabled { background: #9ca3af; cursor: not-allowed; }
+        #formStatus { text-align: center; margin-top: 12px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Register</h1>
+
+    <form id="regForm" novalidate>
+        <div class="field">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="5–15 alphanumeric characters">
+            <div class="feedback" id="usernameFeedback"></div>
+        </div>
+
+        <div class="field">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Min 8 chars, 1 uppercase, 1 digit, 1 special">
+            <div class="feedback" id="passwordFeedback"></div>
+        </div>
+
+        <div class="field">
+            <label for="phone">Phone (Nigerian)</label>
+            <input type="text" id="phone" placeholder="+234 followed by 10 digits">
+            <div class="feedback" id="phoneFeedback"></div>
+        </div>
+
+        <button type="submit" id="submitBtn" disabled>Register</button>
+        <p id="formStatus"></p>
+    </form>
+
+    <script>
+        // Question 5: Real-time registration form validator using regex.
+        // Validates:
+        //   - username: alphanumeric, 5–15 chars
+        //   - password: min 8 chars, 1 uppercase, 1 digit, 1 special char
+        //   - Nigerian phone: +234 followed by 10 digits
+        // Shows live feedback beside each field as the user types.
+
+        const patterns = {
+            // ^[A-Za-z0-9]+$     -> only letters and digits
+            // {5,15}              -> length between 5 and 15
+            username: /^[A-Za-z0-9]{5,15}$/,
+
+            // (?=.*[A-Z])  at least one uppercase
+            // (?=.*\d)     at least one digit
+            // (?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~])  at least one special char
+            // .{8,}       at least 8 characters
+            password: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]).{8,}$/,
+
+            // +234 then exactly 10 digits
+            phone: /^\+234\d{10}$/,
+        };
+
+        const fields = [
+            { id: 'username', feedback: 'usernameFeedback', message: 'Username must be 5–15 alphanumeric characters.' },
+            { id: 'password', feedback: 'passwordFeedback', message: 'Password needs 8+ chars with an uppercase, a digit, and a special character.' },
+            { id: 'phone',    feedback: 'phoneFeedback',    message: 'Phone must be +234 followed by 10 digits.' },
+        ];
+
+        // state[name] = true if valid (only filled fields count as valid)
+        const state = { username: false, password: false, phone: false };
+
+        function setFeedback(input, fbEl, ok, okMessage) {
+            fbEl.textContent = ok ? okMessage : fields.find(f => f.id === input.id).message;
+            fbEl.className = 'feedback ' + (ok ? 'ok' : 'bad');
+            input.className = ok ? 'valid' : 'invalid';
+        }
+
+        function validate(input) {
+            const value = input.value.trim();
+            const fbEl = document.getElementById(input.dataset.feedback);
+            const pattern = patterns[input.id];
+
+            if (value === '') {
+                fbEl.textContent = '';
+                input.className = '';
+                state[input.id] = false;
+            } else if (pattern.test(value)) {
+                setFeedback(input, fbEl, true, 'Looks good ✓');
+                state[input.id] = true;
+            } else {
+                setFeedback(input, fbEl, false);
+                state[input.id] = false;
+            }
+
+            document.getElementById('submitBtn').disabled =
+                !(state.username && state.password && state.phone);
+        }
+
+        // Wire up live validation
+        fields.forEach(f => {
+            const input = document.getElementById(f.id);
+            input.dataset.feedback = f.feedback;
+            input.addEventListener('input', () => validate(input));
+        });
+
+        document.getElementById('regForm').addEventListener('submit', e => {
+            e.preventDefault();
+            if (state.username && state.password && state.phone) {
+                document.getElementById('formStatus').textContent =
+                    'Registration successful!';
+                document.getElementById('formStatus').style.color = '#16a34a';
+            }
+        });
+    </script>
+</body>
+</html>
