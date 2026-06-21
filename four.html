@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Results</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 720px; margin: 30px auto; padding: 0 16px; }
+        h1 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        th, td { border: 1px solid #d1d5db; padding: 8px 12px; text-align: left; }
+        th { background: #f3f4f6; }
+        tr:nth-child(even) td { background: #fafafa; }
+        .pass { color: #16a34a; font-weight: bold; }
+        .fail { color: #dc2626; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Student Results</h1>
+    <div id="tables"></div>
+
+    <script>
+        // Question 4: Parse the JSON string, compute each student's average
+        // across the three subjects, and render a results table showing
+        // name, average, and Pass/Fail status (pass mark: 50).
+
+        const schoolData = '{ "classA": [' +
+            '{ "name":"Amara",   "CSC101":72, "CSC102":55, "CSC103":68 },' +
+            '{ "name":"Chidi",   "CSC101":40, "CSC102":48, "CSC103":35 },' +
+            '{ "name":"Ngozi",   "CSC101":85, "CSC102":90, "CSC103":78 },' +
+            '{ "name":"Emeka",   "CSC101":60, "CSC102":52, "CSC103":44 }' +
+            '], "classB": [' +
+            '{ "name":"Fatima",  "CSC101":91, "CSC102":88, "CSC103":95 },' +
+            '{ "name":"Tunde",   "CSC101":30, "CSC102":45, "CSC103":50 },' +
+            '{ "name":"Blessing","CSC101":77, "CSC102":63, "CSC103":70 },' +
+            '{ "name":"Seun",    "CSC101":55, "CSC102":49, "CSC103":58 }' +
+            '] }';
+
+        const PASS_MARK = 50;
+
+        function averageOf(student) {
+            const total = student.CSC101 + student.CSC102 + student.CSC103;
+            return +(total / 3).toFixed(2);
+        }
+
+        function buildTable(className, students) {
+            const section = document.createElement('section');
+            section.innerHTML = `<h2>${className}</h2>`;
+
+            const table = document.createElement('table');
+            table.innerHTML =
+                '<thead><tr>' +
+                '<th>Name</th><th>Average</th><th>Status</th>' +
+                '</tr></thead>';
+
+            const tbody = document.createElement('tbody');
+            students.forEach(s => {
+                const avg = averageOf(s);
+                const passed = avg >= PASS_MARK;
+                const tr = document.createElement('tr');
+                tr.innerHTML =
+                    `<td>${s.name}</td>` +
+                    `<td>${avg}</td>` +
+                    `<td class="${passed ? 'pass' : 'fail'}">${passed ? 'Pass' : 'Fail'}</td>`;
+                tbody.appendChild(tr);
+            });
+
+            table.appendChild(tbody);
+            section.appendChild(table);
+            return section;
+        }
+
+        const data = JSON.parse(schoolData);
+        const container = document.getElementById('tables');
+
+        // Render each class in the order it appears in the JSON
+        Object.keys(data).forEach(className => {
+            container.appendChild(buildTable(className, data[className]));
+        });
+    </script>
+</body>
+</html>
