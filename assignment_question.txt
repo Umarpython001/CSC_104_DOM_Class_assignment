@@ -1,0 +1,49 @@
+Assignment (1)
+1 Build a Library Management System using classes. Create a Book
+class with properties: title, author, year, and available. Create a
+Library class with methods to add a book, borrow a book (marks it
+unavailable), return a book, and list all currently available books.
+
+2 Build a dynamic shopping cart page. Display at least 5 products,
+each with an “Add to Cart” button. Clicking the button adds the item
+to a cart section showing the product name, price, and a “Remove”
+button. The page should show a running total price that updates
+automatically as items are added or removed.
+
+3 Create an interactive multiple-choice quiz with at least 4 questions.
+Show one question at a time. When the user selects an answer, the
+background should turn green for correct or red for wrong before
+moving to the next question. Display the final score and a grade
+remark at the end.
+
+DOM & JavaScript 59 / 61
+
+Assignment (2)
+
+4 Parse the JSON string below, compute each student’s average
+score across the three subjects, and render a results table in the
+browser showing name, average, and Pass/Fail status (pass mark: 50).
+5 Build a real-time registration form validator using regex. The form
+must validate: a username (alphanumeric, 5–15 characters), a
+password (min 8 characters, at least one uppercase letter, one digit,
+and one special character), and a Nigerian phone number (+234
+followed by 10 digits). Show live feedback beside each field as the user
+types.
+
+DOM & JavaScript 60 / 61
+
+Assignment (2) – JSON String
+
+let schoolData = '{" classA ":[
+{" name ":" Amara ", " CSC101 ":72 , " CSC102 ":55 , " CSC103 ":68} ,
+{" name ":" Chidi ", " CSC101 ":40 , " CSC102 ":48 , " CSC103 ":35} ,
+{" name ":" Ngozi ", " CSC101 ":85 , " CSC102 ":90 , " CSC103 ":78} ,
+{" name ":" Emeka ", " CSC101 ":60 , " CSC102 ":52 , " CSC103 ":44}] ,
+" classB ":[
+{" name ":" Fatima ", " CSC101 ":91 , " CSC102 ":88 , " CSC103 ":95} ,
+{" name ":" Tunde ", " CSC101 ":30 , " CSC102 ":45 , " CSC103 ":50} ,
+{" name ":" Blessing " ," CSC101 ":77 , " CSC102 ":63 , " CSC103 ":70} ,
+{" name ":" Seun ", " CSC101 ":55 , " CSC102 ":49 , " CSC103 ":58}]} ';
+Parse schoolData using JSON.parse(), loop through both classes,
+compute each student’s average across CSC101, CSC102 and CSC103, then
+display a table on the page with columns: Name, Average, Status (Pass/Fail)

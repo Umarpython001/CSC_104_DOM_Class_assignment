@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container{
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .products-section{
+            flex: 2;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .cart-section{
+            flex: 1;
+            min-width: 280px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            align-self: flex-start;
+        }
+        .product{
+            background-color: aqua;
+            width: 30%;
+            min-width: 200px;
+            display: block;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        .product img{
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 6px;
+            display: block;
+        }
+        .add-to-cart-btn{
+            width: 100%;
+            padding: 10px;
+            background-color: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 8px;
+            border-radius: 4px;
+        }
+        .add-to-cart-btn:hover{
+            background-color: darkgreen;
+        }
+        .cart-item{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .cart-item:last-child{
+            border-bottom: none;
+        }
+        .remove-btn{
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .remove-btn:hover{
+            background-color: darkred;
+        }
+        .total{
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 2px solid #000;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        h2{
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Build a dynamic shopping cart page. Display at least 5 products,
+each with an “Add to Cart” button. Clicking the button adds the item
+to a cart section showing the product name, price, and a “Remove”
+button. The page should show a running total price that updates
+automatically as items are added or removed. -->
+
+
+<div class="container">
+
+    <div class="products-section" id="products-section">
+
+        <div class="product">
+            <img src="assets/television.jfif" alt="Picture of a television">
+            <h3>Television</h3>
+            <p><i>$199</i></p>
+        </div><br>
+
+        <div class="product">
+            <img src="assets/car.jfif" alt="Picture of a car">
+            <h3>Car</h3>
+            <p><i>$9999</i></p>
+        </div><br>
+
+        <div class="product">
+            <img src="assets/fan.jfif" alt="Picture of a fan">
+            <h3>Fan</h3>
+            <p><i>$29</i></p>
+        </div><br>
+
+        <div class="product">
+            <img src="assets/phone.jfif" alt="Picture of a phone">
+            <h3>Phone</h3>
+            <p><i>$399</i></p>
+        </div><br>
+
+        <div class="product">
+            <img src="assets/laptop.jfif" alt="Picture of a laptop">
+            <h3>Laptop</h3>
+            <p><i>$999</i></p>
+        </div><br>
+
+        <div class="product">
+            <img src="assets/guitar.jfif" alt="Picture of a guitar">
+            <h3>Guitar</h3>
+            <p><i>$299</i></p>
+        </div><br>
+
+    </div>
+
+    <div class="cart-section">
+        <h2>Cart</h2>
+        <div id="cart-items"></div>
+        <div class="total">Total: $<span id="cart-total">0</span></div>
+    </div>
+
+</div>
+
+
+
+<script>
+
+    let cart = []
+
+    let prods = document.querySelectorAll(".product")
+    let cartItemsContainer = document.getElementById("cart-items")
+    let cartTotalEl = document.getElementById("cart-total")
+
+    // Helper: strip the "$" off a price string like "$199" -> 199
+    function parsePrice(priceText){
+        return Number(priceText.replace("$", "").trim())
+    }
+
+    // Re-render the cart section from the cart array
+    function renderCart(){
+        cartItemsContainer.innerHTML = ""
+        let total = 0
+
+        cart.forEach((item, index) => {
+            total += item.price
+
+            let row = document.createElement("div")
+            row.classList.add("cart-item")
+
+            let info = document.createElement("span")
+            info.textContent = `${item.name} - $${item.price}`
+
+            let removeBtn = document.createElement("button")
+            removeBtn.textContent = "Remove"
+            removeBtn.classList.add("remove-btn")
+            removeBtn.addEventListener("click", () => {
+                cart.splice(index, 1)
+                renderCart()
+            })
+
+            row.appendChild(info)
+            row.appendChild(removeBtn)
+            cartItemsContainer.appendChild(row)
+        })
+
+        cartTotalEl.textContent = total
+    }
+
+    prods.forEach((element, index, array) => {
+
+        let btn = document.createElement("button")
+        btn.textContent = `Add to Cart`
+        btn.classList.add("add-to-cart-btn")
+        btn.addEventListener("click", () => {
+            let name = element.querySelector("h3").textContent
+            let price = parsePrice(element.querySelector("p i").textContent)
+            cart.push({ name, price })
+            renderCart()
+        })
+        element.appendChild(btn)
+
+    })
+    console.log(prods)
+
+</script>
+
+</body>
+</html>
